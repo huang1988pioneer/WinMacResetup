@@ -85,10 +85,15 @@ public partial class MainWindow : Window
         PaidInput.IsChecked = _selected.IsPaid; LicenseInput.Text = _selected.LicenseKey; NotesInput.Text = _selected.Notes;
     }
 
-    private void AddClick(object? sender, RoutedEventArgs e)
+    private async void AddClick(object? sender, RoutedEventArgs e)
     {
-        var record = new AppRecord { Name = "新軟體項目" };
-        _records.Add(record); Refresh(); RecordsList.SelectedItem = record;
+        var dialog = new NewRecordDialog();
+        await dialog.ShowDialog<string?>(this);
+        if (dialog.Record is not { } record) return;
+        _records.Add(record);
+        await PersistAsync();
+        RecordsList.SelectedItem = record;
+        StatusText.Text = "已新增項目。";
     }
 
     private async void SaveDetailClick(object? sender, RoutedEventArgs e)
