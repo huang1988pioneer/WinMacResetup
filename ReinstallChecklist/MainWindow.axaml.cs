@@ -75,14 +75,33 @@ public partial class MainWindow : Window
         if (_controlsReady) Refresh();
     }
 
-    private void RecordSelected(object? sender, SelectionChangedEventArgs e)
+    private async void RecordSelected(object? sender, SelectionChangedEventArgs e)
     {
         _selected = RecordsList.SelectedItem as AppRecord;
         DetailPanel.IsEnabled = _selected is not null;
         if (_selected is null) return;
         DetailHint.Text = _selected.IsInstalled ? "此項目已標記為完成。" : "完成安裝後，勾選左側方框。";
-        NameInput.Text = _selected.Name; CategoryInput.Text = _selected.Category; PlatformInput.Text = _selected.Platforms;
+        NameInput.Text = _selected.Name; CategoryInput.Text = string.IsNullOrWhiteSpace(_selected.Category) ? "未分類" : _selected.Category;
+        PlatformInput.SelectedIndex = _selected.Platforms switch { "Windows" => 0, "macOS" => 1, _ => 2 };
         PaidInput.IsChecked = _selected.IsPaid; LicenseInput.Text = _selected.LicenseKey; NotesInput.Text = _selected.Notes;
+        if (!string.IsNullOrWhiteSpace(_selected.LicenseKey))
+        {
+            try
+            {
+                var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+                if (clipboard is null)
+                {
+                    StatusText.Text = "找不到系統剪貼簿，無法複製序號。";
+                    return;
+                }
+                await clipboard.SetTextAsync(_selected.LicenseKey);
+                StatusText.Text = $"已複製「{_selected.Name}」的序號至剪貼簿。";
+            }
+            catch (Exception ex)
+            {
+                StatusText.Text = $"無法複製序號：{ex.Message}";
+            }
+        }
     }
 
     private async void AddClick(object? sender, RoutedEventArgs e)
@@ -101,8 +120,10 @@ public partial class MainWindow : Window
         if (_selected is null) return;
         var name = NameInput.Text?.Trim();
         if (string.IsNullOrWhiteSpace(name)) { StatusText.Text = "軟體名稱不能空白。"; return; }
-        _selected.Name = name; _selected.Category = CategoryInput.Text?.Trim() ?? "一般";
-        _selected.Platforms = PlatformInput.Text?.Trim() ?? "Windows, macOS";
+        _selected.Name = name; _selected.Category = string.IsNullOrWhiteSpace(CategoryInput.Text) ? "未分類" : CategoryInput.Text.Trim();
+        _selected.Platforms = PlatformInput.SelectedItem is ComboBoxItem item
+            ? item.Content?.ToString() ?? "Windows, macOS"
+            : "Windows, macOS";
         _selected.IsPaid = PaidInput.IsChecked == true; _selected.LicenseKey = LicenseInput.Text?.Trim() ?? ""; _selected.Notes = NotesInput.Text?.Trim() ?? "";
         await PersistAsync(); StatusText.Text = "項目已儲存。";
     }

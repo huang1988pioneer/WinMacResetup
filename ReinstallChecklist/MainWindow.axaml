@@ -83,9 +83,15 @@
             <TextBlock Text="軟體名稱" FontWeight="SemiBold" Foreground="#34465B" />
             <TextBox x:Name="NameInput" />
             <TextBlock Text="分類" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
-            <TextBox x:Name="CategoryInput" />
-            <TextBlock Text="平台（例如 Windows, macOS）" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
-            <TextBox x:Name="PlatformInput" />
+            <ComboBox x:Name="CategoryInput" IsEditable="True" Text="未分類">
+              <ComboBoxItem Content="未分類" />
+            </ComboBox>
+            <TextBlock Text="平台" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
+            <ComboBox x:Name="PlatformInput" SelectedIndex="2">
+              <ComboBoxItem Content="Windows" />
+              <ComboBoxItem Content="macOS" />
+              <ComboBoxItem Content="Windows, macOS" />
+            </ComboBox>
             <CheckBox x:Name="PaidInput" Content="付費軟體／需要授權" Margin="0,9,0,0" />
             <TextBlock Text="序號或授權帳號備註" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
             <TextBox x:Name="LicenseInput" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="62" Watermark="序號、購買帳號或授權位置" />

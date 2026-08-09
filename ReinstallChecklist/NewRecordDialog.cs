@@ -8,8 +8,17 @@ namespace ReinstallChecklist;
 public sealed class NewRecordDialog : Window
 {
     private readonly TextBox _name = new() { Watermark = "例如：Visual Studio Code" };
-    private readonly TextBox _category = new() { Text = "一般" };
-    private readonly TextBox _platforms = new() { Text = "Windows, macOS" };
+    private readonly ComboBox _category = new()
+    {
+        ItemsSource = new[] { "未分類" },
+        IsEditable = true,
+        Text = "未分類"
+    };
+    private readonly ComboBox _platforms = new()
+    {
+        ItemsSource = new[] { "Windows", "macOS", "Windows, macOS" },
+        SelectedIndex = 2
+    };
     private readonly CheckBox _paid = new() { Content = "付費軟體／需要授權" };
     private readonly TextBox _license = new() { AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, MinHeight = 54, Watermark = "序號、帳號或授權位置" };
     private readonly TextBox _notes = new() { AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, MinHeight = 54, Watermark = "選填" };
@@ -59,8 +68,8 @@ public sealed class NewRecordDialog : Window
         Record = new AppRecord
         {
             Name = name,
-            Category = string.IsNullOrWhiteSpace(_category.Text) ? "一般" : _category.Text.Trim(),
-            Platforms = string.IsNullOrWhiteSpace(_platforms.Text) ? "Windows, macOS" : _platforms.Text.Trim(),
+            Category = string.IsNullOrWhiteSpace(_category.Text) ? "未分類" : _category.Text.Trim(),
+            Platforms = _platforms.SelectedItem as string ?? "Windows, macOS",
             IsPaid = _paid.IsChecked == true,
             LicenseKey = _license.Text?.Trim() ?? "",
             Notes = _notes.Text?.Trim() ?? ""
