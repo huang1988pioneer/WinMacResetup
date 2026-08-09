@@ -5,6 +5,16 @@
         Width="1180" Height="760" MinWidth="940" MinHeight="620"
         Title="重灌清單">
   <!-- THESIS: a calm install desk, not a generic dashboard. OWN-WORLD: deep ink surfaces, warm paper panels, one cobalt action color. STORY: see what remains, record sensitive access, and carry it safely to the next system. FIRST VIEWPORT: an at-a-glance progress rail anchors the left; the checklist stays central and the selected app is a focused right-side work area. FORM: desktop operating surface, direction seed: reinstall-checklist-v1. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->
+  <Window.Styles>
+    <Style Selector="TextBox">
+      <Setter Property="Foreground" Value="#172337" />
+      <Setter Property="Background" Value="#FFFDF8" />
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="Foreground" Value="#172337" />
+      <Setter Property="Background" Value="#FFFDF8" />
+    </Style>
+  </Window.Styles>
   <Grid Background="#101828" ColumnDefinitions="250,*,310">
     <Border Grid.Column="0" Background="#172337" Padding="24">
       <StackPanel Spacing="20">
@@ -22,18 +32,18 @@
         </Border>
         <StackPanel Spacing="8">
           <TextBlock Text="清單篩選" FontWeight="SemiBold" Foreground="#D9E4F2" />
-          <ComboBox x:Name="FilterBox" SelectedIndex="0" SelectionChanged="FilterChanged">
+          <ComboBox x:Name="FilterBox" SelectedIndex="0" SelectionChanged="FilterChanged" Background="#F4F7FB" Foreground="#172337">
             <ComboBoxItem Content="全部項目" />
             <ComboBoxItem Content="尚未安裝" />
             <ComboBoxItem Content="已安裝" />
             <ComboBoxItem Content="付費軟體" />
           </ComboBox>
-          <TextBox x:Name="SearchBox" Watermark="搜尋程式名稱…" TextChanged="SearchChanged" />
+          <TextBox x:Name="SearchBox" Watermark="搜尋程式名稱…" TextChanged="SearchChanged" Background="#F4F7FB" Foreground="#172337" />
         </StackPanel>
         <StackPanel Spacing="8" VerticalAlignment="Bottom">
           <Button Click="ScanInstalledClick" Background="#3578E5" Foreground="White">檢查目前已安裝軟體</Button>
-          <Button Click="ExportClick">加密匯出備份</Button>
-          <Button Click="ImportClick">匯入加密備份</Button>
+          <Button Click="ExportClick" Background="#2B4265" Foreground="#FFFFFF">加密匯出備份</Button>
+          <Button Click="ImportClick" Background="#2B4265" Foreground="#FFFFFF">匯入加密備份</Button>
           <TextBlock x:Name="StatusText" Foreground="#B5C2D5" TextWrapping="Wrap" FontSize="12" />
         </StackPanel>
       </StackPanel>
@@ -79,7 +89,7 @@
           <TextBlock x:Name="DetailHint" Text="選擇清單中的項目來編輯。" Foreground="#66778B" TextWrapping="Wrap" />
         </StackPanel>
         <ScrollViewer Grid.Row="1" Margin="0,22,0,0">
-          <StackPanel x:Name="DetailPanel" Spacing="10" IsEnabled="False">
+          <StackPanel x:Name="DetailPanel" Spacing="10" IsVisible="False">
             <TextBlock Text="軟體名稱" FontWeight="SemiBold" Foreground="#34465B" />
             <TextBox x:Name="NameInput" />
             <TextBlock Text="分類" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />

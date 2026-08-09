@@ -31,7 +31,7 @@ Used before a reinstall to export a record, and after a reinstall while applicat
 - The checklist is empty by default. Entries appear only when the user adds them or imports an encrypted backup.
 - Users can add, edit, remove, filter, and mark applications as installed.
 - Windows checks installed-program registry entries; macOS checks application bundles in `/Applications`.
-- Export and import use a password-derived AES-256-GCM encrypted file. Each operation requires the user to enter and confirm the encryption password; the password is never stored in the export file.
+- Export and import use a password-derived AES-256-GCM encrypted file. Export requires password confirmation; import requires the backup password once. The password is never stored in the export file.
 - Before a backup is imported, local changes are written to a separate temporary record file. After import, changes are written to the imported record file. License fields should be treated as sensitive.
 
 ## Evidence on Hand

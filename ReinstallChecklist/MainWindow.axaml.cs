@@ -78,7 +78,7 @@ public partial class MainWindow : Window
     private async void RecordSelected(object? sender, SelectionChangedEventArgs e)
     {
         _selected = RecordsList.SelectedItem as AppRecord;
-        DetailPanel.IsEnabled = _selected is not null;
+        DetailPanel.IsVisible = _selected is not null;
         if (_selected is null) return;
         DetailHint.Text = _selected.IsInstalled ? "此項目已標記為完成。" : "完成安裝後，勾選左側方框。";
         NameInput.Text = _selected.Name; CategoryInput.Text = string.IsNullOrWhiteSpace(_selected.Category) ? "未分類" : _selected.Category;
@@ -131,7 +131,7 @@ public partial class MainWindow : Window
     private async void DeleteClick(object? sender, RoutedEventArgs e)
     {
         if (_selected is null) return;
-        _records.Remove(_selected); _selected = null; DetailPanel.IsEnabled = false; DetailHint.Text = "選擇清單中的項目來編輯。";
+        _records.Remove(_selected); _selected = null; DetailPanel.IsVisible = false; DetailHint.Text = "選擇清單中的項目來編輯。";
         await PersistAsync(); StatusText.Text = "項目已刪除。";
     }
 
@@ -183,7 +183,7 @@ public partial class MainWindow : Window
         {
             var imported = await BackupService.ImportAsync(files[0].Path.LocalPath, pass);
             _records.Clear(); foreach (var item in imported) _records.Add(item);
-            _selected = null; DetailPanel.IsEnabled = false; await _store.SaveImportedAsync(_records); Refresh(); StatusText.Text = $"已安全匯入 {imported.Count} 個項目，後續變更將寫入正式記錄檔。";
+            _selected = null; DetailPanel.IsVisible = false; await _store.SaveImportedAsync(_records); Refresh(); StatusText.Text = $"已安全匯入 {imported.Count} 個項目，後續變更將寫入正式記錄檔。";
         }
         catch (Exception ex) { StatusText.Text = $"匯入失敗：{ex.Message}"; }
     }
