@@ -12,10 +12,12 @@ public partial class MainWindow : Window
     private readonly DataStore _store = new();
     private readonly ObservableCollection<AppRecord> _records = [];
     private AppRecord? _selected;
+    private bool _controlsReady;
 
     public MainWindow()
     {
         InitializeComponent();
+        _controlsReady = true;
         Opened += async (_, _) =>
         {
             foreach (var record in await _store.LoadAsync()) _records.Add(record);
@@ -61,8 +63,15 @@ public partial class MainWindow : Window
         }
     }
 
-    private void FilterChanged(object? sender, SelectionChangedEventArgs e) => Refresh();
-    private void SearchChanged(object? sender, TextChangedEventArgs e) => Refresh();
+    private void FilterChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_controlsReady) Refresh();
+    }
+
+    private void SearchChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_controlsReady) Refresh();
+    }
 
     private void RecordSelected(object? sender, SelectionChangedEventArgs e)
     {
