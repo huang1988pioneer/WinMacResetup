@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-09T00:00:00Z",
+  "title": "Design System: 重灌清單",
+  "extensions": {
+    "colorMeta": {
+      "ink-deep": { "role": "neutral", "displayName": "Deep Desk Ink", "canonical": "#101828", "tonalRamp": ["#101828", "#172337", "#233552", "#34465B", "#5A6B80", "#7B8796", "#B5C2D5", "#F7FAFC"] },
+      "paper-workspace": { "role": "neutral", "displayName": "Working Paper", "canonical": "#F5F7FA", "tonalRamp": ["#172337", "#34465B", "#5A6B80", "#7B8796", "#B5C2D5", "#DFE5EC", "#F5F7FA", "#FFFFFF"] },
+      "cobalt-action": { "role": "primary", "displayName": "Action Cobalt", "canonical": "#3578E5", "tonalRamp": ["#102A5C", "#17458F", "#2559AA", "#3578E5", "#71A9FF", "#A9CBFF", "#D4E4FF", "#F0F6FF"] },
+      "warning-licence": { "role": "secondary", "displayName": "Licence Amber", "canonical": "#A84700", "tonalRamp": ["#3A1800", "#5C2500", "#7B3300", "#A84700", "#D66A16", "#EEA45B", "#F8D1AA", "#FFF2E7"] },
+      "danger-delete": { "role": "tertiary", "displayName": "Delete Red", "canonical": "#A32929", "tonalRamp": ["#3D1010", "#601717", "#7D2020", "#A32929", "#D15A5A", "#EFA1A1", "#F8D1D1", "#FFF2F2"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Rail Display", "purpose": "Product name in the dark navigation rail." },
+      "headline": { "displayName": "Workspace Headline", "purpose": "Central list heading." },
+      "title": { "displayName": "Editor Title", "purpose": "Right-side detail pane heading." },
+      "body": { "displayName": "Record Body", "purpose": "Record names and standard control text." },
+      "label": { "displayName": "Supporting Label", "purpose": "Progress help, metadata, and badges." }
+    },
+    "shadows": [
+      { "name": "record-card", "value": "0 3px 14px 0 #160D1B2A", "purpose": "Subtle separation of repeatable checklist records from the working-paper list canvas." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Cobalt Action Button",
+      "kind": "button",
+      "refersTo": "button-cobalt",
+      "description": "Primary scan or save action on the operating surface.",
+      "html": "<button class=\"ds-btn-cobalt\">SAVE ITEM</button>",
+      "css": ".ds-btn-cobalt { background:#3578E5; color:#fff; border:0; border-radius:4px; padding:9px 14px; font:600 14px system-ui,sans-serif; cursor:pointer; } .ds-btn-cobalt:hover { background:#2559AA; } .ds-btn-cobalt:active { background:#17458F; } .ds-btn-cobalt:focus-visible { outline:3px solid #71A9FF; outline-offset:2px; }"
+    },
+    {
+      "name": "Ink Utility Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Dark add-item action for the pale checklist header.",
+      "html": "<button class=\"ds-btn-ink\">ADD ITEM</button>",
+      "css": ".ds-btn-ink { background:#172337; color:#fff; border:0; border-radius:4px; padding:8px 18px; font:600 14px system-ui,sans-serif; cursor:pointer; } .ds-btn-ink:hover { background:#233552; } .ds-btn-ink:active { background:#101828; } .ds-btn-ink:focus-visible { outline:3px solid #71A9FF; outline-offset:2px; }"
+    },
+    {
+      "name": "Record Card",
+      "kind": "card",
+      "refersTo": "record-card",
+      "description": "A single application record in the main checklist.",
+      "html": "<article class=\"ds-record-card\"><div><strong>Visual Studio Code</strong><p>Development · Windows, macOS</p></div><span class=\"ds-state-badge\">INSTALLED</span></article>",
+      "css": ".ds-record-card { display:flex; align-items:start; justify-content:space-between; gap:16px; background:#fff; color:#172337; border-radius:12px; box-shadow:0 3px 14px 0 #160D1B2A; padding:16px; font:14px system-ui,sans-serif; } .ds-record-card strong { display:block; font-size:16px; } .ds-record-card p { margin:5px 0 0; color:#5A6B80; font-size:12px; } .ds-state-badge { background:#E8F0FF; color:#2559AA; border-radius:9px; padding:4px 9px; font-size:12px; }"
+    },
+    {
+      "name": "Progress Module",
+      "kind": "custom",
+      "refersTo": "progress-panel",
+      "description": "At-a-glance completion summary for the dark rail.",
+      "html": "<section class=\"ds-progress\"><span>INSTALL PROGRESS</span><strong>8 / 16</strong><div class=\"ds-track\"><i></i></div><small>8 items remaining</small></section>",
+      "css": ".ds-progress { background:#233552; color:#D9E4F2; border-radius:14px; padding:16px; font:14px system-ui,sans-serif; } .ds-progress strong { display:block; margin:5px 0; color:#fff; font-size:24px; } .ds-track { height:8px; overflow:hidden; border-radius:4px; background:#0D1522; } .ds-track i { display:block; width:50%; height:100%; background:#71A9FF; } .ds-progress small { display:block; margin-top:5px; color:#B5C2D5; font-size:12px; }"
+    },
+    {
+      "name": "State Badge",
+      "kind": "chip",
+      "refersTo": "state-badge",
+      "description": "Quiet compact status label for a checklist item.",
+      "html": "<span class=\"ds-state-badge\">INSTALLED</span>",
+      "css": ".ds-state-badge { display:inline-block; background:#E8F0FF; color:#2559AA; border-radius:9px; padding:4px 9px; font:400 12px system-ui,sans-serif; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Calm Install Desk",
+    "overview": "This is a desktop operating surface for a consequential but routine job: rebuilding a machine without losing the important details. The shell is deep ink and deliberately quiet; the central work surface is a pale paper field where the checklist stays readable and actionable. Cobalt is reserved for affirmative progress and save/scan actions, while licence-related and destructive content receive their own direct warning colors.",
+    "keyCharacteristics": ["Dark operational rail, bright working canvas, and a white detail pane.", "Dense enough for ongoing checklist work, with generous panel padding to keep it calm.", "One cobalt action language; warning and delete colors are semantic exceptions.", "Rounded cards and badges with restrained, diffuse list-card elevation."],
+    "rules": [
+      { "name": "The One Cobalt Rule", "body": "Cobalt signals progress and affirmative action; do not use it as broad decoration or for every interactive surface.", "section": "colors" },
+      { "name": "The Semantic Exception Rule", "body": "warning-licence identifies paid/licensed software, and danger-delete identifies deletion only. Neither is a general accent.", "section": "colors" },
+      { "name": "The Weight-Only Hierarchy Rule", "body": "Keep headings semibold and supporting text regular; avoid decorative type treatments in this utility surface.", "section": "typography" },
+      { "name": "The Flat Desk Rule", "body": "Panels remain flat by default; reserve shadows for repeatable record cards.", "section": "elevation" }
+    ],
+    "dos": ["Do preserve the dark-left / pale-center / white-right desk structure for desktop checklist work.", "Do use cobalt for positive, state-changing actions and progress only.", "Do keep record metadata smaller and quieter than record names.", "Do preserve the explicit semantic distinction between licences and deletion.", "Do lean on Fluent controls for cross-platform inputs, selection, and keyboard behavior."],
+    "donts": ["Don't turn the central list into a dense generic dashboard or a grid of equally elevated panels.", "Don't introduce additional accent colors for decoration.", "Don't use warnings or red as a substitute for normal action styling.", "Don't replace native Fluent control affordances with custom web-like input chrome."]
+  }
+}

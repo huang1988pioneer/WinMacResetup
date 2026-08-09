@@ -1,0 +1,101 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="using:ReinstallChecklist.Models"
+        x:Class="ReinstallChecklist.MainWindow"
+        Width="1180" Height="760" MinWidth="940" MinHeight="620"
+        Title="重灌清單">
+  <!-- THESIS: a calm install desk, not a generic dashboard. OWN-WORLD: deep ink surfaces, warm paper panels, one cobalt action color. STORY: see what remains, record sensitive access, and carry it safely to the next system. FIRST VIEWPORT: an at-a-glance progress rail anchors the left; the checklist stays central and the selected app is a focused right-side work area. FORM: desktop operating surface, direction seed: reinstall-checklist-v1. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->
+  <Grid Background="#101828" ColumnDefinitions="250,*,310">
+    <Border Grid.Column="0" Background="#172337" Padding="24">
+      <StackPanel Spacing="20">
+        <StackPanel Spacing="6">
+          <TextBlock Text="重灌清單" FontSize="27" FontWeight="SemiBold" Foreground="#F7FAFC" />
+          <TextBlock Text="讓下一台系統少一件遺漏。" Foreground="#B5C2D5" TextWrapping="Wrap" />
+        </StackPanel>
+        <Border Background="#233552" CornerRadius="14" Padding="16">
+          <StackPanel Spacing="5">
+            <TextBlock Text="安裝進度" Foreground="#D9E4F2" />
+            <TextBlock x:Name="ProgressText" FontSize="24" FontWeight="SemiBold" Foreground="#FFFFFF" />
+            <ProgressBar x:Name="ProgressBar" Height="8" Minimum="0" Maximum="1" Background="#0D1522" Foreground="#71A9FF" />
+            <TextBlock x:Name="ProgressHint" FontSize="12" Foreground="#B5C2D5" />
+          </StackPanel>
+        </Border>
+        <StackPanel Spacing="8">
+          <TextBlock Text="清單篩選" FontWeight="SemiBold" Foreground="#D9E4F2" />
+          <ComboBox x:Name="FilterBox" SelectedIndex="0" SelectionChanged="FilterChanged">
+            <ComboBoxItem Content="全部項目" />
+            <ComboBoxItem Content="尚未安裝" />
+            <ComboBoxItem Content="已安裝" />
+            <ComboBoxItem Content="付費軟體" />
+          </ComboBox>
+          <TextBox x:Name="SearchBox" Watermark="搜尋程式名稱…" TextChanged="SearchChanged" />
+        </StackPanel>
+        <StackPanel Spacing="8" VerticalAlignment="Bottom">
+          <Button Click="ScanInstalledClick" Background="#3578E5" Foreground="White">檢查目前已安裝軟體</Button>
+          <Button Click="ExportClick">加密匯出備份</Button>
+          <Button Click="ImportClick">匯入加密備份</Button>
+          <TextBlock x:Name="StatusText" Foreground="#B5C2D5" TextWrapping="Wrap" FontSize="12" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Column="1" Background="#FBF7EE" RowDefinitions="Auto,*" Margin="0">
+      <Border Padding="28,24,28,18" BorderBrush="#DFE5EC" BorderThickness="0,0,0,1">
+        <DockPanel>
+          <StackPanel>
+            <TextBlock Text="預設安裝檢查表" FontSize="25" FontWeight="SemiBold" Foreground="#172337" />
+            <TextBlock Text="勾選完成的項目；可用系統掃描比對目前已安裝的程式。" Foreground="#5A6B80" Margin="0,5,0,0" />
+          </StackPanel>
+          <Button DockPanel.Dock="Right" Click="AddClick" Padding="18,8" Background="#172337" Foreground="White">新增項目</Button>
+        </DockPanel>
+      </Border>
+      <ListBox x:Name="RecordsList" Grid.Row="1" Margin="18" SelectionChanged="RecordSelected" BorderThickness="0" Background="Transparent">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="models:AppRecord">
+            <Border Background="#FFFCF6" CornerRadius="12" Padding="16" Margin="0,0,0,9" BoxShadow="0 3 14 0 #160D1B2A">
+              <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                <CheckBox Grid.RowSpan="2" IsChecked="{Binding IsInstalled}" Click="InstalledChecked" VerticalAlignment="Center" Margin="0,0,14,0" />
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" Foreground="#172337" />
+                <Border Grid.Column="2" Background="#E8F0FF" CornerRadius="9" Padding="9,4">
+                  <TextBlock Text="{Binding StateLabel}" FontSize="12" Foreground="#2559AA" />
+                </Border>
+                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,5,0,0">
+                  <TextBlock Text="{Binding Category}" FontSize="12" Foreground="#5A6B80" />
+                  <TextBlock Text="{Binding PlatformLabel}" FontSize="12" Foreground="#7B8796" />
+                  <TextBlock Text="付費／授權" FontSize="12" Foreground="#A84700" IsVisible="{Binding IsPaid}" />
+                  <TextBlock Text="{Binding InstalledMatch, StringFormat=系統比對：{0}}" FontSize="12" Foreground="#2D6A4F" IsVisible="{Binding HasInstalledMatch}" />
+                </StackPanel>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Grid>
+
+    <Border Grid.Column="2" Background="#FFFDF8" BorderBrush="#DFE5EC" BorderThickness="1,0,0,0" Padding="24">
+      <Grid RowDefinitions="Auto,*">
+        <StackPanel Spacing="5">
+          <TextBlock Text="項目資訊" FontSize="21" FontWeight="SemiBold" Foreground="#172337" />
+          <TextBlock x:Name="DetailHint" Text="選擇清單中的項目來編輯。" Foreground="#66778B" TextWrapping="Wrap" />
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" Margin="0,22,0,0">
+          <StackPanel x:Name="DetailPanel" Spacing="10" IsEnabled="False">
+            <TextBlock Text="軟體名稱" FontWeight="SemiBold" Foreground="#34465B" />
+            <TextBox x:Name="NameInput" />
+            <TextBlock Text="分類" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
+            <TextBox x:Name="CategoryInput" />
+            <TextBlock Text="平台（例如 Windows, macOS）" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
+            <TextBox x:Name="PlatformInput" />
+            <CheckBox x:Name="PaidInput" Content="付費軟體／需要授權" Margin="0,9,0,0" />
+            <TextBlock Text="序號或授權帳號備註" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
+            <TextBox x:Name="LicenseInput" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="62" Watermark="序號、購買帳號或授權位置" />
+            <TextBlock Text="其他備註" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
+            <TextBox x:Name="NotesInput" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="70" />
+            <Button Click="SaveDetailClick" Background="#3578E5" Foreground="White" Margin="0,10,0,0">儲存項目</Button>
+            <Button Click="DeleteClick" Foreground="#A32929">刪除此項目</Button>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>
