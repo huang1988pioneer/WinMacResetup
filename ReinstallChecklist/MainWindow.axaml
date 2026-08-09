@@ -41,7 +41,7 @@
           <TextBox x:Name="SearchBox" Watermark="搜尋程式名稱…" TextChanged="SearchChanged" Background="#F4F7FB" Foreground="#172337" />
         </StackPanel>
         <StackPanel Spacing="8" VerticalAlignment="Bottom">
-          <Button Click="ScanInstalledClick" Background="#3578E5" Foreground="White">檢查目前已安裝軟體</Button>
+          <Button Click="ScanInstalledClick" Background="#3578E5" Foreground="White">掃描並加入已安裝軟體</Button>
           <Button Click="ExportClick" Background="#2B4265" Foreground="#FFFFFF">加密匯出備份</Button>
           <Button Click="ImportClick" Background="#2B4265" Foreground="#FFFFFF">匯入加密備份</Button>
           <TextBlock x:Name="StatusText" Foreground="#B5C2D5" TextWrapping="Wrap" FontSize="12" />
@@ -73,6 +73,7 @@
                   <TextBlock Text="{Binding Category}" FontSize="12" Foreground="#5A6B80" />
                   <TextBlock Text="{Binding PlatformLabel}" FontSize="12" Foreground="#7B8796" />
                   <TextBlock Text="付費／授權" FontSize="12" Foreground="#A84700" IsVisible="{Binding IsPaid}" />
+                  <Button Click="OpenWebsiteClick" Tag="{Binding OfficialWebsite}" Content="官方網站 ↗" FontSize="12" Foreground="#2559AA" Background="Transparent" BorderThickness="0" Padding="0" IsVisible="{Binding HasOfficialWebsite}" />
                   <TextBlock Text="{Binding InstalledMatch, StringFormat=系統比對：{0}}" FontSize="12" Foreground="#2D6A4F" IsVisible="{Binding HasInstalledMatch}" />
                 </StackPanel>
               </Grid>
@@ -105,6 +106,9 @@
             <CheckBox x:Name="PaidInput" Content="付費軟體／需要授權" Margin="0,9,0,0" />
             <TextBlock Text="序號或授權帳號備註" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
             <TextBox x:Name="LicenseInput" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="62" Watermark="序號、購買帳號或授權位置" />
+            <TextBlock Text="官方網站" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
+            <TextBox x:Name="WebsiteInput" Watermark="https://example.com" />
+            <Button Click="OpenWebsiteClick" Tag="{Binding Text, ElementName=WebsiteInput}" HorizontalAlignment="Left" Foreground="#2559AA" Background="Transparent" BorderThickness="0" Padding="0">開啟官方網站 ↗</Button>
             <TextBlock Text="其他備註" FontWeight="SemiBold" Foreground="#34465B" Margin="0,7,0,0" />
             <TextBox x:Name="NotesInput" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="70" />
             <Button Click="SaveDetailClick" Background="#3578E5" Foreground="White" Margin="0,10,0,0">儲存項目</Button>

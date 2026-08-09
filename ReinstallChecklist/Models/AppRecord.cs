@@ -9,6 +9,7 @@ public sealed class AppRecord
     public bool IsInstalled { get; set; }
     public bool IsPaid { get; set; }
     public string LicenseKey { get; set; } = "";
+    public string OfficialWebsite { get; set; } = "";
     public string Notes { get; set; } = "";
     public DateTimeOffset? InstalledAt { get; set; }
     public string InstalledMatch { get; set; } = "";
@@ -16,4 +17,5 @@ public sealed class AppRecord
     public string PlatformLabel => Platforms;
     public string StateLabel => IsInstalled ? "已完成" : "待安裝";
     public bool HasInstalledMatch => !string.IsNullOrWhiteSpace(InstalledMatch);
+    public bool HasOfficialWebsite => !string.IsNullOrWhiteSpace(OfficialWebsite);
 }

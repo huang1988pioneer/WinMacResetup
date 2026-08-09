@@ -21,6 +21,7 @@ public sealed class NewRecordDialog : Window
     };
     private readonly CheckBox _paid = new() { Content = "付費軟體／需要授權" };
     private readonly TextBox _license = new() { AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, MinHeight = 54, Watermark = "序號、帳號或授權位置" };
+    private readonly TextBox _website = new() { Watermark = "https://example.com" };
     private readonly TextBox _notes = new() { AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, MinHeight = 54, Watermark = "選填" };
     private readonly TextBlock _error = new() { Foreground = Brushes.Firebrick, IsVisible = false };
 
@@ -29,7 +30,7 @@ public sealed class NewRecordDialog : Window
     public NewRecordDialog()
     {
         Title = "新增項目";
-        Width = 470; Height = 590; MinWidth = 420; CanResize = false;
+        Width = 470; Height = 650; MinWidth = 420; CanResize = false;
         var content = new StackPanel { Margin = new Avalonia.Thickness(24), Spacing = 8 };
         content.Children.Add(new TextBlock { Text = "建立新的安裝檢查項目", FontSize = 20, FontWeight = FontWeight.SemiBold });
         content.Children.Add(new TextBlock { Text = "項目會先寫入目前使用中的記錄檔。", Foreground = Brushes.DimGray, Margin = new Avalonia.Thickness(0, 0, 0, 7) });
@@ -38,6 +39,7 @@ public sealed class NewRecordDialog : Window
         AddField(content, "平台", _platforms);
         content.Children.Add(_paid);
         AddField(content, "序號或授權資訊", _license);
+        AddField(content, "官方網站", _website);
         AddField(content, "備註", _notes);
         content.Children.Add(_error);
 
@@ -65,6 +67,13 @@ public sealed class NewRecordDialog : Window
             _name.Focus();
             return;
         }
+        if (!TryNormalizeWebsite(_website.Text, out var website))
+        {
+            _error.Text = "官方網站請填入有效的 http:// 或 https:// 網址。";
+            _error.IsVisible = true;
+            _website.Focus();
+            return;
+        }
         Record = new AppRecord
         {
             Name = name,
@@ -72,8 +81,19 @@ public sealed class NewRecordDialog : Window
             Platforms = _platforms.SelectedItem as string ?? "Windows, macOS",
             IsPaid = _paid.IsChecked == true,
             LicenseKey = _license.Text?.Trim() ?? "",
+            OfficialWebsite = website,
             Notes = _notes.Text?.Trim() ?? ""
         };
         Close();
+    }
+
+    private static bool TryNormalizeWebsite(string? value, out string website)
+    {
+        website = value?.Trim() ?? "";
+        if (website.Length == 0) return true;
+        if (!Uri.TryCreate(website, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)) return false;
+        website = uri.AbsoluteUri;
+        return true;
     }
 }

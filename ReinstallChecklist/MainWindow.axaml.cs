@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -83,7 +84,7 @@ public partial class MainWindow : Window
         DetailHint.Text = _selected.IsInstalled ? "此項目已標記為完成。" : "完成安裝後，勾選左側方框。";
         NameInput.Text = _selected.Name; CategoryInput.Text = string.IsNullOrWhiteSpace(_selected.Category) ? "未分類" : _selected.Category;
         PlatformInput.SelectedIndex = _selected.Platforms switch { "Windows" => 0, "macOS" => 1, _ => 2 };
-        PaidInput.IsChecked = _selected.IsPaid; LicenseInput.Text = _selected.LicenseKey; NotesInput.Text = _selected.Notes;
+        PaidInput.IsChecked = _selected.IsPaid; LicenseInput.Text = _selected.LicenseKey; WebsiteInput.Text = _selected.OfficialWebsite; NotesInput.Text = _selected.Notes;
         if (!string.IsNullOrWhiteSpace(_selected.LicenseKey))
         {
             try
@@ -124,8 +125,51 @@ public partial class MainWindow : Window
         _selected.Platforms = PlatformInput.SelectedItem is ComboBoxItem item
             ? item.Content?.ToString() ?? "Windows, macOS"
             : "Windows, macOS";
-        _selected.IsPaid = PaidInput.IsChecked == true; _selected.LicenseKey = LicenseInput.Text?.Trim() ?? ""; _selected.Notes = NotesInput.Text?.Trim() ?? "";
+        if (!TryNormalizeWebsite(WebsiteInput.Text, out var website))
+        {
+            StatusText.Text = "官方網站請填入有效的 http:// 或 https:// 網址。";
+            WebsiteInput.Focus();
+            return;
+        }
+        _selected.IsPaid = PaidInput.IsChecked == true; _selected.LicenseKey = LicenseInput.Text?.Trim() ?? ""; _selected.OfficialWebsite = website; _selected.Notes = NotesInput.Text?.Trim() ?? "";
         await PersistAsync(); StatusText.Text = "項目已儲存。";
+    }
+
+    private void OpenWebsiteClick(object? sender, RoutedEventArgs e)
+    {
+        var website = sender switch
+        {
+            Button { Tag: string value } => value,
+            _ => WebsiteInput.Text
+        };
+        if (!TryNormalizeWebsite(website, out var url))
+        {
+            StatusText.Text = "官方網站請填入有效的 http:// 或 https:// 網址。";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            StatusText.Text = "此項目尚未設定官方網站。";
+            return;
+        }
+        try
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = $"無法開啟官方網站：{ex.Message}";
+        }
+    }
+
+    private static bool TryNormalizeWebsite(string? value, out string website)
+    {
+        website = value?.Trim() ?? "";
+        if (website.Length == 0) return true;
+        if (!Uri.TryCreate(website, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)) return false;
+        website = uri.AbsoluteUri;
+        return true;
     }
 
     private async void DeleteClick(object? sender, RoutedEventArgs e)
@@ -141,16 +185,32 @@ public partial class MainWindow : Window
         {
             StatusText.Text = "正在讀取目前系統的已安裝程式…";
             var installed = await InstalledAppScanner.GetInstalledNamesAsync();
-            var matches = 0;
+            var marked = 0;
             foreach (var record in _records)
             {
                 var match = InstalledAppScanner.FindMatch(record.Name, installed);
                 if (match is null) continue;
                 record.InstalledMatch = match;
-                if (!record.IsInstalled) { record.IsInstalled = true; record.InstalledAt = DateTimeOffset.Now; matches++; }
+                if (!record.IsInstalled) { record.IsInstalled = true; record.InstalledAt = DateTimeOffset.Now; marked++; }
+            }
+            var platform = OperatingSystem.IsMacOS() ? "macOS" : OperatingSystem.IsWindows() ? "Windows" : "Windows, macOS";
+            var added = 0;
+            foreach (var name in installed.OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase))
+            {
+                if (_records.Any(record => InstalledAppScanner.FindMatch(record.Name, [name]) is not null)) continue;
+                _records.Add(new AppRecord
+                {
+                    Name = name,
+                    Category = "系統掃描",
+                    Platforms = platform,
+                    IsInstalled = true,
+                    InstalledAt = DateTimeOffset.Now,
+                    InstalledMatch = name
+                });
+                added++;
             }
             await PersistAsync();
-            StatusText.Text = matches > 0 ? $"系統掃描完成，新增標記 {matches} 個項目。" : "系統掃描完成，沒有找到可新增標記的項目。";
+            StatusText.Text = $"系統掃描完成：標記 {marked} 個既有項目，新增 {added} 個已安裝軟體。";
         }
         catch (Exception ex) { StatusText.Text = $"掃描失敗：{ex.Message}"; }
     }
