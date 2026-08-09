@@ -43,8 +43,8 @@
       <Border Padding="28,24,28,18" BorderBrush="#DFE5EC" BorderThickness="0,0,0,1">
         <DockPanel>
           <StackPanel>
-            <TextBlock Text="預設安裝檢查表" FontSize="25" FontWeight="SemiBold" Foreground="#172337" />
-            <TextBlock Text="勾選完成的項目；可用系統掃描比對目前已安裝的程式。" Foreground="#5A6B80" Margin="0,5,0,0" />
+            <TextBlock Text="安裝檢查表" FontSize="25" FontWeight="SemiBold" Foreground="#172337" />
+            <TextBlock Text="從新增項目開始，或匯入已加密的備份。" Foreground="#5A6B80" Margin="0,5,0,0" />
           </StackPanel>
           <Button DockPanel.Dock="Right" Click="AddClick" Padding="18,8" Background="#172337" Foreground="White">新增項目</Button>
         </DockPanel>

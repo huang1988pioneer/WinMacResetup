@@ -28,15 +28,15 @@ Used before a reinstall to export a record, and after a reinstall while applicat
 
 ## Capabilities and Constraints
 
-- Default Windows and macOS application lists, grouped by purpose.
+- The checklist is empty by default. Entries appear only when the user adds them or imports an encrypted backup.
 - Users can add, edit, remove, filter, and mark applications as installed.
 - Windows checks installed-program registry entries; macOS checks application bundles in `/Applications`.
 - Export and import use a password-derived AES-256-GCM encrypted file. Each operation requires the user to enter and confirm the encryption password; the password is never stored in the export file.
-- Local records are stored in the user's application-data directory. License fields should be treated as sensitive.
+- Before a backup is imported, local changes are written to a separate temporary record file. After import, changes are written to the imported record file. License fields should be treated as sensitive.
 
 ## Evidence on Hand
 
-No external product assets or app catalogue have been supplied. Default checklist entries are examples which users can change.
+No external product assets or app catalogue have been supplied.
 
 ## Product Principles
 

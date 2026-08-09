@@ -22,7 +22,9 @@ public partial class MainWindow : Window
         {
             foreach (var record in await _store.LoadAsync()) _records.Add(record);
             Refresh();
-            StatusText.Text = "本機清單會自動儲存。序號請透過加密備份保存。";
+            StatusText.Text = _store.UsesTemporaryRecord
+                ? "目前使用臨時記錄檔；匯入加密備份後會切換為正式記錄。"
+                : "已使用匯入記錄檔；序號請持續透過加密備份保存。";
         };
     }
 
@@ -155,7 +157,7 @@ public partial class MainWindow : Window
         {
             var imported = await BackupService.ImportAsync(files[0].Path.LocalPath, pass);
             _records.Clear(); foreach (var item in imported) _records.Add(item);
-            _selected = null; DetailPanel.IsEnabled = false; await PersistAsync(); StatusText.Text = $"已安全匯入 {imported.Count} 個項目。";
+            _selected = null; DetailPanel.IsEnabled = false; await _store.SaveImportedAsync(_records); Refresh(); StatusText.Text = $"已安全匯入 {imported.Count} 個項目，後續變更將寫入正式記錄檔。";
         }
         catch (Exception ex) { StatusText.Text = $"匯入失敗：{ex.Message}"; }
     }
