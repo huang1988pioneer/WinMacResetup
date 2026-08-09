@@ -184,28 +184,30 @@ public partial class MainWindow : Window
         try
         {
             StatusText.Text = "正在讀取目前系統的已安裝程式…";
-            var installed = await InstalledAppScanner.GetInstalledNamesAsync();
+            var installed = await InstalledAppScanner.GetInstalledAppsAsync();
             var marked = 0;
             foreach (var record in _records)
             {
-                var match = InstalledAppScanner.FindMatch(record.Name, installed);
+                var match = InstalledAppScanner.FindMatch(record.Name, installed.Keys);
                 if (match is null) continue;
                 record.InstalledMatch = match;
+                record.InstalledSource = installed[match];
                 if (!record.IsInstalled) { record.IsInstalled = true; record.InstalledAt = DateTimeOffset.Now; marked++; }
             }
             var platform = OperatingSystem.IsMacOS() ? "macOS" : OperatingSystem.IsWindows() ? "Windows" : "Windows, macOS";
             var added = 0;
-            foreach (var name in installed.OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase))
+            foreach (var app in installed.OrderBy(app => app.Key, StringComparer.CurrentCultureIgnoreCase))
             {
-                if (_records.Any(record => InstalledAppScanner.FindMatch(record.Name, [name]) is not null)) continue;
+                if (_records.Any(record => InstalledAppScanner.FindMatch(record.Name, [app.Key]) is not null)) continue;
                 _records.Add(new AppRecord
                 {
-                    Name = name,
+                    Name = app.Key,
                     Category = "系統掃描",
                     Platforms = platform,
                     IsInstalled = true,
                     InstalledAt = DateTimeOffset.Now,
-                    InstalledMatch = name
+                    InstalledMatch = app.Key,
+                    InstalledSource = app.Value
                 });
                 added++;
             }

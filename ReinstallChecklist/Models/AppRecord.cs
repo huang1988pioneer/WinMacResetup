@@ -13,9 +13,11 @@ public sealed class AppRecord
     public string Notes { get; set; } = "";
     public DateTimeOffset? InstalledAt { get; set; }
     public string InstalledMatch { get; set; } = "";
+    public string InstalledSource { get; set; } = "";
 
     public string PlatformLabel => Platforms;
     public string StateLabel => IsInstalled ? "已完成" : "待安裝";
     public bool HasInstalledMatch => !string.IsNullOrWhiteSpace(InstalledMatch);
+    public bool HasInstalledSource => !string.IsNullOrWhiteSpace(InstalledSource);
     public bool HasOfficialWebsite => !string.IsNullOrWhiteSpace(OfficialWebsite);
 }

@@ -75,6 +75,7 @@
                   <TextBlock Text="付費／授權" FontSize="12" Foreground="#A84700" IsVisible="{Binding IsPaid}" />
                   <Button Click="OpenWebsiteClick" Tag="{Binding OfficialWebsite}" Content="官方網站 ↗" FontSize="12" Foreground="#2559AA" Background="Transparent" BorderThickness="0" Padding="0" IsVisible="{Binding HasOfficialWebsite}" />
                   <TextBlock Text="{Binding InstalledMatch, StringFormat=系統比對：{0}}" FontSize="12" Foreground="#2D6A4F" IsVisible="{Binding HasInstalledMatch}" />
+                  <TextBlock Text="{Binding InstalledSource, StringFormat=來源：{0}}" FontSize="12" Foreground="#315B8A" IsVisible="{Binding HasInstalledSource}" />
                 </StackPanel>
               </Grid>
             </Border>
