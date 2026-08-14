@@ -44,6 +44,7 @@
           <Button Click="ScanInstalledClick" Background="#3578E5" Foreground="White">掃描並加入已安裝軟體</Button>
           <Button Click="ExportClick" Background="#2B4265" Foreground="#FFFFFF">加密匯出備份</Button>
           <Button Click="ImportClick" Background="#2B4265" Foreground="#FFFFFF">匯入加密備份</Button>
+          <Button Click="OpenTroubleshootingClick" Background="Transparent" Foreground="#D9E4F2" HorizontalContentAlignment="Left">障礙排除手冊</Button>
           <TextBlock x:Name="StatusText" Foreground="#B5C2D5" TextWrapping="Wrap" FontSize="12" />
         </StackPanel>
       </StackPanel>

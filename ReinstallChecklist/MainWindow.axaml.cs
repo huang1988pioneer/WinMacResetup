@@ -249,4 +249,9 @@ public partial class MainWindow : Window
         }
         catch (Exception ex) { StatusText.Text = $"匯入失敗：{ex.Message}"; }
     }
+
+    private void OpenTroubleshootingClick(object? sender, RoutedEventArgs e)
+    {
+        new TroubleshootingWindow().Show(this);
+    }
 }

@@ -1,0 +1,39 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ReinstallChecklist.TroubleshootingWindow"
+        Width="740" Height="560" MinWidth="600" MinHeight="440"
+        Title="障礙排除手冊"
+        Background="#FBF7EE">
+  <Grid RowDefinitions="Auto,*">
+    <Border Background="#172337" Padding="28,22">
+      <StackPanel Spacing="4">
+        <TextBlock Text="障礙排除手冊" FontSize="25" FontWeight="SemiBold" Foreground="#FFFFFF" />
+        <TextBlock Text="先確認儲存控制器設定，再進行下一步。" Foreground="#B5C2D5" />
+      </StackPanel>
+    </Border>
+    <ScrollViewer Grid.Row="1" Margin="28,24">
+      <StackPanel Spacing="18" MaxWidth="650">
+        <TextBlock Text="INACCESSIBLE_BOOT_DEVICE（0x7B）" FontSize="21" FontWeight="SemiBold" Foreground="#172337" />
+        <TextBlock Text="Windows 無法存取開機磁碟。最先應確認 BIOS／UEFI 的儲存控制器模式是否與系統安裝時一致。" TextWrapping="Wrap" Foreground="#34465B" />
+
+        <Border Background="#FFFFFF" BorderBrush="#DFE5EC" BorderThickness="1" CornerRadius="12" Padding="18">
+          <StackPanel Spacing="8">
+            <TextBlock Text="第一步：確認 AHCI" FontSize="17" FontWeight="SemiBold" Foreground="#172337" />
+            <TextBlock Text="重新開機後進入 BIOS／UEFI，尋找 Storage、SATA Configuration 或 Storage Controller，查看目前模式是否為 AHCI。" TextWrapping="Wrap" Foreground="#34465B" />
+            <TextBlock Text="如果目前是 IDE、RAID／RST 或其他模式，請先記錄原設定；不要在不確定 Windows 安裝模式時直接切換。" TextWrapping="Wrap" Foreground="#A84700" />
+          </StackPanel>
+        </Border>
+
+        <StackPanel Spacing="6">
+          <TextBlock Text="檢查順序" FontSize="17" FontWeight="SemiBold" Foreground="#172337" />
+          <TextBlock Text="1. 確認系統碟、SATA 線與電源線已正確連接。" TextWrapping="Wrap" Foreground="#34465B" />
+          <TextBlock Text="2. 確認 BIOS／UEFI 是否仍偵測得到系統碟。" TextWrapping="Wrap" Foreground="#34465B" />
+          <TextBlock Text="3. 確認儲存控制器模式；新安裝 Windows 通常建議使用 AHCI。" TextWrapping="Wrap" Foreground="#34465B" />
+          <TextBlock Text="4. 若切換設定後無法開機，請先還原原本設定，再依主機板或電腦製造商文件處理。" TextWrapping="Wrap" Foreground="#34465B" />
+        </StackPanel>
+
+        <TextBlock Text="提示：不同品牌的設定名稱與進入 BIOS／UEFI 的按鍵不同，請以裝置製造商文件為準。" TextWrapping="Wrap" FontSize="12" Foreground="#5A6B80" />
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Window>
